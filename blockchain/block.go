@@ -3,6 +3,7 @@ package blockchain
 import (
 	"bytes"
 	"crypto/sha256"
+	"my_bitcoin/proofofwork"
 	"my_bitcoin/util"
 	"time"
 )
@@ -21,6 +22,7 @@ type Block struct {
 
 // NewBlock 新建区块
 func NewBlock(data string, prevHash []byte) *Block {
+	// 1.构建新区块
 	block := Block{
 		Version:    00,
 		PrevHash:   prevHash,
@@ -31,7 +33,12 @@ func NewBlock(data string, prevHash []byte) *Block {
 		Hash:       []byte{},
 		Data:       []byte(data),
 	}
-	block.SetHash()
+	// 2.将区块传入到共识算法对象中
+	pow := proofofwork.NewProofOfWork(&block)
+	// 3.挖矿，得到最后符合要求的 hash 和 随机数
+	hash, nonce := pow.Run()
+	block.Hash = hash
+	block.Nonce = nonce
 	return &block
 }
 
