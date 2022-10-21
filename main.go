@@ -7,7 +7,7 @@ import (
 
 func main() {
 	block := blockchain.NewBlock("hello world", []byte{})
-	fmt.Println(block.PrevHash)
-	fmt.Println(block.Hash)
-	fmt.Println(block.Data)
+	fmt.Printf("prevHash:%v\n", block.PrevHash)
+	fmt.Printf("hash:%v\n", block.Hash)
+	fmt.Printf("data:%s\n", block.Data)
 }
