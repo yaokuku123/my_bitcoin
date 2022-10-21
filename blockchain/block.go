@@ -3,6 +3,8 @@ package blockchain
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/gob"
+	"log"
 	"my_bitcoin/util"
 	"time"
 )
@@ -48,20 +50,42 @@ func GenesisBlock() *Block {
 }
 
 // SetHash 设置 Hash
-func (bc *Block) SetHash() {
+func (block *Block) SetHash() {
 	// 拼接需要被 Hash 的数据
 	blockInfoList := [][]byte{
-		util.Uint64ToByte(bc.Version),
-		bc.PrevHash,
-		bc.MerkleRoot,
-		util.Uint64ToByte(bc.TimeStamp),
-		util.Uint64ToByte(bc.Difficulty),
-		util.Uint64ToByte(bc.Nonce),
-		bc.Data,
+		util.Uint64ToByte(block.Version),
+		block.PrevHash,
+		block.MerkleRoot,
+		util.Uint64ToByte(block.TimeStamp),
+		util.Uint64ToByte(block.Difficulty),
+		util.Uint64ToByte(block.Nonce),
+		block.Data,
 	}
 	blockInfo := bytes.Join(blockInfoList, []byte{})
 	// sha256
 	hash := sha256.Sum256(blockInfo)
 	// 将 hash 设置到 block 中
-	bc.Hash = hash[:]
+	block.Hash = hash[:]
+}
+
+// Serialize 序列化区块
+func (block *Block) Serialize() []byte {
+	var buffer bytes.Buffer
+	encoder := gob.NewEncoder(&buffer)
+	err := encoder.Encode(&block)
+	if err != nil {
+		log.Panic(err)
+	}
+	return buffer.Bytes()
+}
+
+// Deserialize 反序列化区块
+func Deserialize(data []byte) Block {
+	var block Block
+	decoder := gob.NewDecoder(bytes.NewReader(data))
+	err := decoder.Decode(&block)
+	if err != nil {
+		log.Panic(err)
+	}
+	return block
 }
