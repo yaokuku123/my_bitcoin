@@ -19,6 +19,12 @@ func NewBlock(data string, prevHash []byte) *Block {
 	return &block
 }
 
+// GenesisBlock 创世纪区块
+func GenesisBlock() *Block {
+	genesisBlock := NewBlock("first block", []byte{})
+	return genesisBlock
+}
+
 // SetHash 设置 Hash
 func (bc *Block) SetHash() {
 	// 拼接需要被 Hash 的数据

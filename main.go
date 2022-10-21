@@ -6,8 +6,10 @@ import (
 )
 
 func main() {
-	block := blockchain.NewBlock("hello world", []byte{})
-	fmt.Printf("prevHash:%v\n", block.PrevHash)
-	fmt.Printf("hash:%v\n", block.Hash)
-	fmt.Printf("data:%s\n", block.Data)
+	bc := blockchain.NewBlockChain()
+	for _, block := range bc.Blocks {
+		fmt.Printf("prevHash:%v\n", block.PrevHash)
+		fmt.Printf("hash:%v\n", block.Hash)
+		fmt.Printf("data:%s\n", block.Data)
+	}
 }
